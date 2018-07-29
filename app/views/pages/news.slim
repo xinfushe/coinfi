@@ -1,2 +1,4 @@
 - feed_sources = (FeedSource.feed_types - ['general']) + FeedSource.where(feed_type: 'general').pluck(:site_hostname)
-= react_component "NewsfeedPage", withStore: true, props: { feedSources: feed_sources, categories: NewsCategory.pluck(:name), loggedIn: !!current_user }
+- toplist_coins = Coin.top(20).order(:ranking)
+- watchlist_coins = user_signed_in? ? current_user.watchlist.coins : nil
+= react_component "NewsfeedPage", withStore: true, props: { toplistCoins: toplist_coins, watchlistCoins: watchlist_coins, feedSources: feed_sources, categories: NewsCategory.pluck(:name), loggedIn: !!current_user }

@@ -1,23 +1,20 @@
 import React from 'react'
 import PercentageChange from '../PercentageChange'
-import Currency from '../Currency'
-import WatchButton from './WatchButton'
+import WatchButton from '../WatchButton'
 
 export default (props) => {
   const { coin, onClick, isActiveEntity, user } = props
   let klass = 'pa-default b--b flex items-center pointer'
-  if (isActiveEntity({ type: 'coin', id: coin.get('id') })) klass += ' bg-foam'
+  if (isActiveEntity({ type: 'coin', id: coin.id })) klass += ' bg-foam'
 
-  const coinPrice = coin.toJS().market_info.price_usd
+  const coinPrice = coin && coin.price && coin.price.usd
   let fixedCount = 0
-  if (coinPrice !== undefined) {
-    fixedCount =
-      coinPrice && coinPrice.split('.')[1].length > 3
-        ? 4
-        : coinPrice.split('.')[1].length
+  if (coinPrice) {
+    const decimals = coinPrice.toString().split('.')[1]
+    fixedCount = decimals.length > 3 ? 4 : decimals.length
   }
   const coinPriceFixed = parseFloat(coinPrice).toFixed(fixedCount)
-  const percentChange = coin.toJS().market_info.percent_change_24h
+  const percentChange = coin.change24h
   return (
     <div className={klass} style={{ minHeight: 57 }}>
       <div className="tooltipped">
@@ -28,8 +25,8 @@ export default (props) => {
         onClick={() => onClick(coin)}
         className="flex-auto flex justify-between items-center"
       >
-        <div className="b f5 pl2">{coin.get('symbol')}</div>
-        {coin.get('market_info') && (
+        <div className="b f5 pl2">{coin.symbol}</div>
+        {coin.price && (
           <div className="right-align">
             {coinPrice && (
               <div>

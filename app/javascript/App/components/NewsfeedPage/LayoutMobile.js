@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import NewsList from './NewsList'
 import BodySection from './BodySection'
 import NewsListHeader from './NewsListHeader'
-import CoinListDrawer from './CoinListDrawer'
+import CoinListDrawer from '../CoinPane/CoinListDrawer'
 import BodySectionDrawer from './BodySectionDrawer'
 
 export default function(props) {

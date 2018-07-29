@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import NewsList from './NewsList'
-import CoinListDrawer from './CoinListDrawer'
+import CoinListDrawer from '../CoinPane/CoinListDrawer'
 import NewsListHeader from './NewsListHeader'
 import BodySection from './BodySection'
 

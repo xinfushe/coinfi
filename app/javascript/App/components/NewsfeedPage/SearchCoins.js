@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import coinSearchProvider from '../../containers/coinSearch'
 import Input from '../Input'
 import Icon from '../Icon'
-import WatchButton from './WatchButton'
+import WatchButton from '../WatchButton'
 import { union } from 'lodash'
 
 class SearchCoins extends Component {

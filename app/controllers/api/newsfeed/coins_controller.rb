@@ -5,10 +5,13 @@ class Api::Newsfeed::CoinsController < ApiController
     else
       coin_ids = Coin.order(:ranking).limit(20).pluck(:id)
     end
-    if current_user
-      coin_ids = (coin_ids + current_user.coin_ids).uniq
-    end
     coins = Coin.where(id: coin_ids).order(:ranking)
+    respond_success index_serializer(coins)
+  end
+
+  def watchlist
+    return unless current_user
+    coins = current_user.watchlist.coins.order(:ranking)
     respond_success index_serializer(coins)
   end
 

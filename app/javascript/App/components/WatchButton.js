@@ -1,54 +1,77 @@
-import React, { Component } from 'react'
-import API from '../lib/localAPI'
+import React from 'react'
+import axios from 'axios'
+import Immutable from 'immutable'
+import _ from 'lodash'
 import Icon from './Icon'
 
-export default class WatchButton extends Component {
-  state = { watching: false }
-  componentDidMount() {
-    const watching = !!this.props.watching
-    this.setState({ watching })
+const WatchButton = ({
+  isWatching,
+  coin,
+  updateUser,
+  onWatch,
+  hasText,
+  user,
+}) => {
+  const hasTextClassNames = 'btn btn-xs btn-gray'
+  /*
+  const addCoinToWatchlist = (id) => {
+    const url = `/api/user.json?q[watchCoin]=${id}`
+    let watchlistAdditions = _.uniqBy(
+      _.merge(this.state.watchlist, this.props.coins),
+      (value) => value.get('symbol'),
+    )
+
+    axios
+      .get(url)
+      .then((data) => {
+        const str = data.data.payload[0]
+        if (this.props.coins.length) {
+          let newMap = Immutable.Map(str)
+          watchlistAdditions.push(newMap)
+          watchlistAdditions = _.uniqBy(watchlistAdditions, (value) =>
+            value.get('symbol'),
+          )
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
-  userIsLoggedIn = !!(this.props.user || this.props.loggedIn)
-  handleClick = () => {
-    if (!this.userIsLoggedIn) return
-    /* This component does its own API request & state management since it's
-    sometimes used on its own, and doesn't have access to Redux */
-    const { coinID: id, onWatch, onChange, setUser } = this.props
-    let { watching } = this.state
-    let params = { watchCoin: id }
-    if (watching) params = { unwatchCoin: id }
-    API.patch('/user', params).then(({ type, payload }) => {
-      if (type === 'success') {
-        if (setUser) setUser(payload)
-        watching = payload.coin_ids.includes(id)
-        this.setState({ watching })
-        if (watching && onWatch) onWatch()
-        if (onChange) onChange(watching)
-      }
-    })
-  }
-  render() {
-    const { watching } = this.state
-    let btnClass = 'btn btn-xs'
-    if (watching) btnClass += ' btn-blue'
-    if (!watching) btnClass += ' btn-gray'
+*/
+
+  if (isWatching(coin.id)) {
     return (
-      <div className="dib tooltipped">
-        {!this.userIsLoggedIn && <div className="tooltip">Login to watch</div>}
-        <button onClick={this.handleClick} className={btnClass}>
-          {watching ? (
-            <span>
-              <Icon name="star" solid className="mr1" />
-              Watching
-            </span>
-          ) : (
-            <span>
-              <Icon name="star" regular className="mr1" />
-              Watch
-            </span>
-          )}
-        </button>
-      </div>
+      <Icon
+        name="star"
+        solid
+        className={`aqua ${hasText ? hasTextClassNames : ''}`}
+        onClick={() => {
+          //removeCoinFromWatchlist(coin.id)
+          updateUser({ unwatchCoin: coin.id })
+        }}
+      >
+        {hasText && 'Watching'}
+      </Icon>
     )
   }
+  return (
+    <div className="div tooltipped">
+      <Icon
+        name="star"
+        light
+        className={`light-silver ${hasText ? hasTextClassNames : ''}`}
+        onClick={() => {
+          // TODO: Implement new onboarding signup flow.
+          if (!user) return (window.location = '/login')
+          if (onWatch) onWatch(coin)
+          updateUser({ watchCoin: coin.id })
+          //addCoinToWatchlist(coin.id)
+        }}
+      >
+        {hasText && 'Watch'}
+      </Icon>
+    </div>
+  )
 }
+
+export default WatchButton
