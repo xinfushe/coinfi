@@ -22,7 +22,6 @@ const NewsListHeader = (props) => {
         />
       )}
       <FilterBar
-        {...props}
         toggleFilterPanel={toggleFilterPanel}
         showCoinListDrawer={showCoinListDrawer}
       >
